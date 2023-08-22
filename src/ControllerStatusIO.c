@@ -169,7 +169,7 @@ BOOL Ros_Controller_Initialize()
         {
             Ros_Debug_BroadcastMsg("Failed to create task for incremental-motion.  Check robot parameters.");
             g_Ros_Controller.tidIncMoveThread = INVALID_TASK;
-            Ros_Controller_SetIOState(IO_FEEDBACK_FAILURE, TRUE);
+            Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_FAILURE, TRUE);
             mpSetAlarm(ALARM_TASK_CREATE_FAIL, APPLICATION_NAME " FAILED TO CREATE TASK", SUBCODE_INCREMENTAL_MOTION);
 
             return FALSE;
@@ -199,11 +199,11 @@ BOOL Ros_Controller_Initialize()
     if(bInitOk)
     {
         // Turn on initialization done I/O signal
-        Ros_Controller_SetIOState(IO_FEEDBACK_INITIALIZATION_DONE, TRUE);
+        Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_INITIALIZATION_DONE, TRUE);
     }
     else
     {
-        Ros_Controller_SetIOState(IO_FEEDBACK_FAILURE, TRUE);
+        Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_FAILURE, TRUE);
         Ros_Debug_BroadcastMsg("Failure to initialize controller");
     }
 
@@ -281,7 +281,7 @@ void Ros_Controller_StatusInit()
     g_Ros_Controller.ioStatusAddr[IO_ROBOTSTATUS_ESTOP_EX].ulAddr = 80025;          // External E-Stop
     g_Ros_Controller.ioStatusAddr[IO_ROBOTSTATUS_ESTOP_PP].ulAddr = 80026;          // Pendant E-Stop
     g_Ros_Controller.ioStatusAddr[IO_ROBOTSTATUS_ESTOP_CTRL].ulAddr = 80027;        // Controller E-Stop
-    g_Ros_Controller.ioStatusAddr[IO_ROBOTSTATUS_WAITING_ROS].ulAddr = IO_FEEDBACK_WAITING_MP_INCMOVE; // Job input signaling ready for external motion
+     g_Ros_Controller.ioStatusAddr[IO_ROBOTSTATUS_WAITING_ROS].ulAddr = g_nodeController.IO_FEEDBACK_WAITING_MP_INCMOVE; // Job input signaling ready for external motion
     g_Ros_Controller.ioStatusAddr[IO_ROBOTSTATUS_INECOMODE].ulAddr = 50727;         // Energy Saving Mode
 #if (YRC1000||YRC1000u)
     g_Ros_Controller.ioStatusAddr[IO_ROBOTSTATUS_PFL_STOP].ulAddr = 81702;          // PFL function stopped the motion
