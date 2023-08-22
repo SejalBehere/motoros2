@@ -8,24 +8,6 @@
 #ifndef MOTOROS2_CONTROLLER_STATUS_IO_H
 #define MOTOROS2_CONTROLLER_STATUS_IO_H
 
-#define IO_FEEDBACK_WAITING_MP_INCMOVE      11120  //output# 889
-#define IO_FEEDBACK_MP_INCMOVE_DONE         11121  //output# 890
-#define IO_FEEDBACK_INITIALIZATION_DONE     11122  //output# 891
-#define IO_FEEDBACK_CONTROLLERRUNNING       11123  //output# 892
-#define IO_FEEDBACK_AGENTCONNECTED          11124  //output# 893
-#define IO_FEEDBACK__                       11125  //output# 894
-#define IO_FEEDBACK___                      11126  //output# 895
-#define IO_FEEDBACK_FAILURE                 11127  //output# 896
-
-#define IO_FEEDBACK_RESERVED_1              11130  //output# 897
-#define IO_FEEDBACK_RESERVED_2              11131  //output# 898
-#define IO_FEEDBACK_RESERVED_3              11132  //output# 899
-#define IO_FEEDBACK_RESERVED_4              11133  //output# 900
-#define IO_FEEDBACK_RESERVED_5              11134  //output# 901
-#define IO_FEEDBACK_RESERVED_6              11135  //output# 902
-#define IO_FEEDBACK_RESERVED_7              11136  //output# 903
-#define IO_FEEDBACK_RESERVED_8              11137  //output# 904
-
 #define INVALID_TASK                        -1
 
 #define MAX_CONTROLLABLE_GROUPS             8
