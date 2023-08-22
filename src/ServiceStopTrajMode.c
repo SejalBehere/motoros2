@@ -67,7 +67,7 @@ void Ros_ServiceStopTrajMode_Trigger(const void* request_msg, void* response_msg
     Ros_MotionControl_StopTrajMode();
 
     // Set I/O signal
-    Ros_Controller_SetIOState(IO_FEEDBACK_MP_INCMOVE_DONE, TRUE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_MP_INCMOVE_DONE, TRUE);
 
     Ros_Debug_BroadcastMsg("stop_traj_mode: stopped trajectory mode");
     rosidl_runtime_c__String__assign(&response->message, "");
