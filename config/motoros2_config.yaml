@@ -268,3 +268,70 @@ publisher_qos:
 #
 # DEFAULT: false
 #allow_custom_inform: false
+#-----------------------------------------------------------------------------
+# IO signals used for signalling internal application status
+signals:
+  - name: IO_FEEDBACK_WAITING_MP_INCMOVE
+    code: 11120
+    output_number: 889
+    status: FALSE
+  - name: IO_FEEDBACK_MP_INCMOVE_DONE
+    code: 11121
+    output_number: 890
+    status: FALSE
+  - name: IO_FEEDBACK_INITIALIZATION_DONE
+    code: 11122
+    output_number: 891
+    status: FALSE
+  - name: IO_FEEDBACK_CONTROLLERRUNNING
+    code: 11123
+    output_number: 892
+    status: TRUE
+  - name: IO_FEEDBACK_AGENTCONNECTED
+    code: 11124
+    output_number: 893
+    status: FALSE
+  - name: IO_FEEDBACK__
+    code: 11125
+    output_number: 894
+    status: 
+  - name: IO_FEEDBACK___ 
+    code: 11126
+    output_number: 895
+    status:
+  - name: IO_FEEDBACK_FAILURE
+    code: 11127
+    output_number: 896
+    status: FALSE
+  - name: IO_FEEDBACK_RESERVED_1
+    code: 11130
+    output_number: 897
+    status: FALSE
+  - name: IO_FEEDBACK_RESERVED_2
+    code: 11131
+    output_number: 898
+    status: FALSE
+  - name: IO_FEEDBACK_RESERVED_3
+    code: 11132
+    output_number: 899
+    status: FALSE
+  - name: IO_FEEDBACK_RESERVED_4
+    code: 11133
+    output_number: 900
+    status: FALSE
+  - name: IO_FEEDBACK_RESERVED_5
+    code: 11134
+    output_number: 901
+    status: FALSE
+  - name: IO_FEEDBACK_RESERVED_6
+    code: 11135
+    output_number: 902
+    status: FALSE
+  - name: IO_FEEDBACK_RESERVED_7
+    code: 11136
+    output_number: 903
+    status: FALSE
+  - name: IO_FEEDBACK_RESERVED_8
+    code: 11137
+    output_number: 904
+    status: FALSE
