@@ -74,7 +74,12 @@ stream-end-event (2)
 
 #include "MotoROS.h"
 
+#define MAX_SIGNAL_NAME_LEN        256
+
+#define MAX_NUM_SIGNALS            16
+
 Ros_Configuration_Settings g_nodeConfigSettings;
+Ros_Controller g_nodeController;
 
 char* joint_names_iterator;
 
@@ -88,12 +93,32 @@ typedef enum
     Value_UserLanPort,
 } Value_Type;
 
+typedef enum
+{
+    Signal_Type_Bool,
+    Signal_Type_Int,
+    Signal_Type_String,
+} Signal_Type;
+
 typedef struct
 {
     const char yamlKey[MAX_YAML_STRING_LEN];
     void* valueToSet;
     Value_Type typeOfValue;
 } Configuration_Item;
+
+typedef struct  
+{
+    const char* Ros_QosString;
+    Ros_QoS_Profile_Setting QosValue;
+} QoSMapping;
+
+typedef struct
+{
+    const char name[MAX_SIGNAL_NAME_LEN];
+    void* value;
+    Signal_Type type;
+} Signal_Item;
 
 Configuration_Item Ros_ConfigFile_Items[] =
 {
@@ -120,6 +145,26 @@ Configuration_Item Ros_ConfigFile_Items[] =
     { "allow_custom_inform_job", &g_nodeConfigSettings.allow_custom_inform_job, Value_Bool },
     { "userlan_monitor_enabled", &g_nodeConfigSettings.userlan_monitor_enabled, Value_Bool },
     { "userlan_monitor_port", &g_nodeConfigSettings.userlan_monitor_port, Value_UserLanPort },
+};
+
+Signal_Item Signal_Items[] =
+{
+    { "IO_FEEDBACK_WAITING_MP_INCMOVE", &g_nodeController.IO_FEEDBACK_WAITING_MP_INCMOVE, Signal_Type_Bool },
+    { "IO_FEEDBACK_MP_INCMOVE_DONE", &g_nodeController.IO_FEEDBACK_MP_INCMOVE_DONE, Signal_Type_Bool },
+    { "IO_FEEDBACK_INITIALIZATION_DONE", &g_nodeController.IO_FEEDBACK_INITIALIZATION_DONE, Signal_Type_Bool },
+    { "IO_FEEDBACK_CONTROLLERRUNNING", &g_nodeController.IO_FEEDBACK_CONTROLLERRUNNING, Signal_Type_Bool },
+    { "IO_FEEDBACK_AGENTCONNECTED", &g_nodeController.IO_FEEDBACK_AGENTCONNECTED, Signal_Type_Bool },
+    { "IO_FEEDBACK__", &g_nodeController.IO_FEEDBACK__, Signal_Type_Bool },
+    { "IO_FEEDBACK___", &g_nodeController.IO_FEEDBACK___, Signal_Type_Bool },
+    { "IO_FEEDBACK_FAILURE", &g_nodeController.IO_FEEDBACK_FAILURE, Signal_Type_Bool },
+    { "IO_FEEDBACK_RESERVED_1", &g_nodeController.IO_FEEDBACK_RESERVED_1, Signal_Type_Bool },
+    { "IO_FEEDBACK_RESERVED_2", &g_nodeController.IO_FEEDBACK_RESERVED_2, Signal_Type_Bool },
+    { "IO_FEEDBACK_RESERVED_3", &g_nodeController.IO_FEEDBACK_RESERVED_3, Signal_Type_Bool },
+    { "IO_FEEDBACK_RESERVED_4", &g_nodeController.IO_FEEDBACK_RESERVED_4, Signal_Type_Bool },
+    { "IO_FEEDBACK_RESERVED_5", &g_nodeController.IO_FEEDBACK_RESERVED_5, Signal_Type_Bool },
+    { "IO_FEEDBACK_RESERVED_6", &g_nodeController.IO_FEEDBACK_RESERVED_6, Signal_Type_Bool },
+    { "IO_FEEDBACK_RESERVED_7", &g_nodeController.IO_FEEDBACK_RESERVED_7, Signal_Type_Bool },
+    { "IO_FEEDBACK_RESERVED_8", &g_nodeController.IO_FEEDBACK_RESERVED_8, Signal_Type_Bool },
 };
 
 void Ros_ConfigFile_SetAllDefaultValues()
@@ -386,6 +431,67 @@ void Ros_ConfigFile_CheckYamlEvent(yaml_event_t* event)
         if (nestedListCounter == 0) //all sub-lists in [joint_names] have been processed
         {
             activeItem = NULL;
+        }
+    }
+}
+
+void Ros_ConfigFile_ParseSignalsList(yaml_event_t* event)
+{
+    static Signal_Item* activeItem = NULL;
+    int numberOfSignals = 0;
+    char* t[] = { "y", "Y", "yes", "Yes", "YES", "true", "True", "TRUE", "on", "On", "ON", "1", NULL };
+    char* f[] = { "n", "N", "no", "No", "NO", "false", "False", "FALSE", "off", "Off", "OFF", "0", NULL };
+    BOOL bBoolValueFound = FALSE;
+
+    if (event->type == YAML_MAPPING_START_EVENT)
+    {
+        if (activeItem)
+        {
+            if (event->data.scalar.length > 0)
+            {
+                bBoolValueFound = FALSE;
+               
+                // Determining the name, code, output_number or status)
+                switch (activeItem->type)
+                {
+                    case Signal_Type_String:
+                        strcpy((char*)activeItem->value, (char*)event->data.scalar.value);
+                        break;
+                    case Signal_Type_Int:
+                        *(int*)activeItem->value = atoi((char*)event->data.scalar.value);
+                        break;
+                    case Signal_Type_Bool:
+                        bBoolValueFound = FALSE;
+                        for (char** p = t; *p; p++)
+                        {
+                            if (strcmp((char*)event->data.scalar.value, *p) == 0)
+                            {
+                                *(BOOL*)activeItem->value = TRUE;
+                                bBoolValueFound = TRUE;
+                                break;
+                            }
+                        }
+                        if (!bBoolValueFound)
+                        {
+                            for (char** p = f; *p; p++)
+                            {
+                                if (strcmp((char*)event->data.scalar.value, *p) == 0)
+                                {
+                                    *(BOOL*)activeItem->value = FALSE;
+                                    bBoolValueFound = TRUE;
+                                    break;
+                                }
+                            }
+                        }
+                        else if (!bBoolValueFound)
+                        {
+                            mpSetAlarm(ALARM_CONFIGURATION_FAIL, "Invalid BOOL in motoros2_config", SUBCODE_CONFIGURATION_INVALID_BOOLEAN_VALUE);
+
+                            Ros_Debug_BroadcastMsg("'%s' is not a valid boolean specifier", (char*)event->data.scalar.value);
+                        }
+                 
+                }
+            }
         }
     }
 }
@@ -834,6 +940,7 @@ void Ros_ConfigFile_Parse()
                     continue;
                 }
                 Ros_ConfigFile_CheckYamlEvent(&event);
+                Ros_ConfigFile_ParseSignalsList(&event);
                 event_type = event.type;
                 yaml_event_delete(&event);
             } while (event_type != YAML_STREAM_END_EVENT);
