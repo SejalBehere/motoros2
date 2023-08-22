@@ -76,22 +76,22 @@ void RosInitTask()
     Ros_ReportVersionInfoToController();
 
     //==================================
-    Ros_Controller_SetIOState(IO_FEEDBACK_WAITING_MP_INCMOVE, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_MP_INCMOVE_DONE, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_INITIALIZATION_DONE, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_CONTROLLERRUNNING, TRUE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_AGENTCONNECTED, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_WAITING_MP_INCMOVE, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_MP_INCMOVE_DONE, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_INITIALIZATION_DONE, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_CONTROLLERRUNNING, TRUE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_AGENTCONNECTED, FALSE);
 
-    Ros_Controller_SetIOState(IO_FEEDBACK_FAILURE, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_FAILURE, FALSE);
 
-    Ros_Controller_SetIOState(IO_FEEDBACK_RESERVED_1, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_RESERVED_2, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_RESERVED_3, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_RESERVED_4, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_RESERVED_5, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_RESERVED_6, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_RESERVED_7, FALSE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_RESERVED_8, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_RESERVED_1, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_RESERVED_2, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_RESERVED_3, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_RESERVED_4, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_RESERVED_5, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_RESERVED_6, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_RESERVED_7, FALSE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_RESERVED_8, FALSE);
 
     //==================================
     FOREVER
@@ -104,7 +104,7 @@ void RosInitTask()
 
         Ros_Communication_ConnectToAgent();
 
-        Ros_Controller_SetIOState(IO_FEEDBACK_AGENTCONNECTED, TRUE);
+        Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_AGENTCONNECTED, TRUE);
 
         Ros_Communication_Initialize();
 
@@ -177,7 +177,7 @@ void RosInitTask()
         }
 
         //==================================
-        Ros_Controller_SetIOState(IO_FEEDBACK_AGENTCONNECTED, FALSE);
+        Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_AGENTCONNECTED, FALSE);
         Ros_Debug_BroadcastMsg("Micro-ROS PC Agent disconnected");
         //Also print to console, for easier debugging (but only if not logging to stdout already)
         if (!g_nodeConfigSettings.log_to_stdout)
@@ -210,7 +210,7 @@ void RosInitTask()
         Ros_mpGetRobotCalibrationData_Cleanup();
 
         //--------------------------------
-        Ros_Controller_SetIOState(IO_FEEDBACK_INITIALIZATION_DONE, FALSE);
+        Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_INITIALIZATION_DONE, FALSE);
 
         Ros_Sleep(2500);
 
