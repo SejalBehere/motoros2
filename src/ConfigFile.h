@@ -85,6 +85,7 @@ typedef enum
 #define DEFAULT_REMAP_RULES             ""
 #define MAX_REMAP_RULE_NUM              16
 #define MAX_REMAP_RULE_LEN              256
+#define MAX_YAML_STRING_LENGTH          16
 
 typedef enum
 {
@@ -138,6 +139,51 @@ typedef struct
     BOOL userlan_monitor_enabled;
     Ros_UserLan_Port_Setting userlan_monitor_port;
 } Ros_Configuration_Settings;
+
+typedef struct
+{
+    char name[MAX_YAML_STRING_LENGTH];
+
+    char IO_FEEDBACK_WAITING_MP_INCMOVE;
+
+    char IO_FEEDBACK_MP_INCMOVE_DONE;
+
+    char IO_FEEDBACK_INITIALIZATION_DONE;
+
+    char IO_FEEDBACK_CONTROLLERRUNNING;
+
+    char IO_FEEDBACK_AGENTCONNECTED;
+
+    char IO_FEEDBACK__;
+
+    char IO_FEEDBACK___;
+
+    char IO_FEEDBACK_FAILURE;
+
+    char IO_FEEDBACK_RESERVED_1;
+
+    char IO_FEEDBACK_RESERVED_2;
+
+    char IO_FEEDBACK_RESERVED_3;
+
+    char IO_FEEDBACK_RESERVED_4;
+
+    char IO_FEEDBACK_RESERVED_5;
+
+    char IO_FEEDBACK_RESERVED_6;
+
+    char IO_FEEDBACK_RESERVED_7;
+
+    char IO_FEEDBACK_RESERVED_8;
+
+    ULONG code;
+
+    int output_number;
+
+    BOOL status;
+}Ros_Controller;
+
+extern Ros_Controller g_nodeController;
 
 extern Ros_Configuration_Settings g_nodeConfigSettings;
 
