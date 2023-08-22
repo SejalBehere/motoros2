@@ -96,9 +96,9 @@ void motoRosAssert_withMsg(BOOL mustBeTrue, ASSERTION_SUBCODE subCodeIfFalse, ch
     vsnprintf(msg, MAX_MSG_LEN, msgFmtIfFalse, va);
     va_end(va);
 
-    Ros_Controller_SetIOState(IO_FEEDBACK_FAILURE, TRUE);
-    Ros_Controller_SetIOState(IO_FEEDBACK_INITIALIZATION_DONE, FALSE);
-
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_FAILURE, TRUE);
+    Ros_Controller_SetIOState(g_nodeController.IO_FEEDBACK_INITIALIZATION_DONE, FALSE);
+    
     mpSetAlarm(ALARM_ASSERTION_FAIL, msg, subCodeIfFalse);
 
     FOREVER
